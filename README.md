@@ -85,7 +85,7 @@ Entries: 149,116
 Columns: 18
 Columns Breakdown:
 
- # | Column                | Non-Null Count | Data Type |
+|# | Column                | Non-Null Count | Data Type |
 |---|----------------------|---------------|----------|
 | 0 | transaction_id       | 149,116      | int64   |
 | 1 | transaction_date     | 149,116      | object  |
