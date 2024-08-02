@@ -282,4 +282,5 @@ The analysis underscores the importance of aligning marketing strategies and ope
 
 ## Acknowledgements
 
-Thank you to Maven Roasters for providing the dataset for this analysis.
+Thank you to Maven Roasters for providing the dataset for this analysis. The dataset used can be accessed on [Kaggle](https://www.kaggle.com/datasets/ahmedabbas757/coffee-sales).
+
