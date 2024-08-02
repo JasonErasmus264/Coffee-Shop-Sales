@@ -92,11 +92,15 @@ Columns Breakdown:
 | 17| Day of Week          | 149,116      | int64   |
 
 dtypes: float64(2), int64(7), object(9)</code></pre>
-            <h3>Column Removal</h3>
-            <p>Some columns are redundant or less informative:</p>
-            <pre><code>data.drop(['transaction_time', 'store_id', 'product_id', 'Month', 'Day of Week'], axis=1, inplace=True)</code></pre>
-            <p>- Removed: `transaction_time`, `store_id`, `product_id`, `Month`, `Day of Week`</p>
-            <p>- Reason: Columns like `transaction_time` are less relevant compared to `transaction_date`, and `store_id` can be replaced by `store_location` which is more descriptive. Similarly, `Month` and `Day of Week` are less useful than `Month Name` and `Day Name`.</p>
+<section id="column-removal">
+    <h3>Column Removal</h3>
+    <p>Some columns are redundant or less informative:</p>
+    <pre><code>data.drop(['transaction_time', 'store_id', 'product_id', 'Month', 'Day of Week'], axis=1, inplace=True)</code></pre>
+    <ul>
+        <li><strong>Removed:</strong> `transaction_time`, `store_id`, `product_id`, `Month`, `Day of Week`</li>
+        <li><strong>Reason:</strong> Columns like `transaction_time` are less relevant compared to `transaction_date`, and `store_id` can be replaced by `store_location` which is more descriptive. Similarly, `Month` and `Day of Week` are less useful than `Month Name` and `Day Name`.</li>
+    </ul>
+</section>
             <h3>Summary Statistics for Numerical Columns</h3>
             <p>To understand the distribution of numerical data, boxplots were generated for `transaction_qty`, `unit_price`, and `Total_Bill`.</p>
             <img src="assets/boxplot.png" alt="Boxplot for Numerical Columns">
@@ -180,7 +184,7 @@ data.to_csv('../data/coffee_cleaned.csv', index=False)</code></pre>
 
         <section id="acknowledgements">
             <h2>Acknowledgements</h2>
-            <p>Thank you to Maven Roasters for providing the dataset for this analysis.</p>
+            <p>Thank you to Maven Roasters for providing the dataset for this analysis. The dataset used can be accessed on <a href="https://www.kaggle.com/datasets/ahmedabbas757/coffee-sales" target="_blank" rel="noopener noreferrer">Kaggle</a>.</p>
         </section>
     </main>
 </body>
