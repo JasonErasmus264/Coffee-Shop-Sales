@@ -76,7 +76,7 @@ To begin with, we inspect the structure of the dataset. The dataset comprises 18
 
 ```
 data.info()
-```
+
 
 Dataset Details:
 
@@ -84,6 +84,7 @@ Type: pandas.core.frame.DataFrame
 Entries: 149,116
 Columns: 18
 Columns Breakdown:
+```
 
 |# | Column                | Non-Null Count | Data Type |
 |---|----------------------|---------------|----------|
