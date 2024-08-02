@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maven Roasters Coffee Shop Sales Analysis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Maven Roasters Coffee Shop Sales Analysis</h1>
+    </header>
+
+    <main>
+        <nav>
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#dataset-overview">Dataset Overview</a></li>
+                <li><a href="#data-cleaning-actions">Data Cleaning Actions</a></li>
+                <li><a href="#analysis">Analysis</a></li>
+                <li><a href="#summary-of-findings">Summary of Findings</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+                <li><a href="#recommended-actions">Recommended Actions</a></li>
+                <li><a href="#acknowledgements">Acknowledgements</a></li>
+            </ul>
+        </nav>
+
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>This project provides an analysis of the sales data for Maven Roasters, a fictitious coffee shop chain with three locations in New York City. The dataset includes transaction records that capture various aspects of sales performance, product details, and pricing. The goal of this analysis is to derive actionable insights to optimize sales strategies, enhance operational efficiency, and improve customer satisfaction.</p>
+        </section>
+
+        <section id="dataset-overview">
+            <h2>Dataset Overview</h2>
+            <h3>About the Dataset</h3>
+            <p><strong>Total Rows:</strong> 149,116</p>
+            <p><strong>Total Columns:</strong> 18</p>
+            <h3>Columns Description</h3>
+            <ul>
+                <li><strong>transaction_id:</strong> Unique sequential ID representing an individual transaction</li>
+                <li><strong>transaction_date:</strong> Date of the transaction (MM/DD/YY)</li>
+                <li><strong>transaction_time:</strong> Timestamp of the transaction (HH:MM:SS)</li>
+                <li><strong>store_id:</strong> Unique ID of the coffee shop where the transaction took place</li>
+                <li><strong>store_location:</strong> Location of the coffee shop where the transaction took place</li>
+                <li><strong>product_id:</strong> Unique ID of the product sold</li>
+                <li><strong>transaction_qty:</strong> Quantity of items sold</li>
+                <li><strong>unit_price:</strong> Retail price of the product sold</li>
+                <li><strong>Total_Bill:</strong> Total amount of the transaction</li>
+                <li><strong>product_category:</strong> Description of the product category</li>
+                <li><strong>product_type:</strong> Description of the product type</li>
+                <li><strong>product_detail:</strong> Description of the product detail</li>
+                <li><strong>Size:</strong> Size of the product</li>
+                <li><strong>Month Name:</strong> Name of the month of the transaction</li>
+                <li><strong>Day Name:</strong> Name of the day of the transaction</li>
+                <li><strong>Hour:</strong> Hour of the transaction</li>
+                <li><strong>Month:</strong> Numeric representation of the month</li>
+                <li><strong>Day of Week:</strong> Numeric representation of the day of the week</li>
+            </ul>
+        </section>
+
+        <section id="data-cleaning-actions">
+            <h2>Data Cleaning Actions</h2>
+            <h3>Initial Inspection</h3>
+            <p>To begin with, we inspect the structure of the dataset. The dataset comprises 18 columns and 149,116 rows, with various data types including integers, floats, and objects.</p>
+            <pre><code>data.info()</code></pre>
+            <p>Dataset Details:</p>
+            <pre><code>Type: pandas.core.frame.DataFrame
+Entries: 149,116
+Columns: 18
+Columns Breakdown:
+
+ # | Column                | Non-Null Count | Data Type |
+|---|----------------------|---------------|----------|
+| 0 | transaction_id       | 149,116      | int64   |
+| 1 | transaction_date     | 149,116      | object  |
+| 2 | transaction_time     | 149,116      | object  |
+| 3 | store_id             | 149,116      | int64   |
+| 4 | store_location       | 149,116      | object  |
+| 5 | product_id           | 149,116      | int64   |
+| 6 | transaction_qty      | 149,116      | int64   |
+| 7 | unit_price           | 149,116      | float64 |
+| 8 | Total_Bill           | 149,116      | float64 |
+| 9 | product_category     | 149,116      | object  |
+| 10| product_type         | 149,116      | object  |
+| 11| product_detail       | 149,116      | object  |
+| 12| Size                 | 149,116      | object  |
+| 13| Month Name           | 149,116      | object  |
+| 14| Day Name             | 149,116      | object  |
+| 15| Hour                 | 149,116      | int64   |
+| 16| Month                | 149,116      | int64   |
+| 17| Day of Week          | 149,116      | int64   |
+
+dtypes: float64(2), int64(7), object(9)</code></pre>
+            <h3>Column Removal</h3>
+            <p>Some columns are redundant or less informative:</p>
+            <pre><code>data.drop(['transaction_time', 'store_id', 'product_id', 'Month', 'Day of Week'], axis=1, inplace=True)</code></pre>
+            <p>- Removed: `transaction_time`, `store_id`, `product_id`, `Month`, `Day of Week`</p>
+            <p>- Reason: Columns like `transaction_time` are less relevant compared to `transaction_date`, and `store_id` can be replaced by `store_location` which is more descriptive. Similarly, `Month` and `Day of Week` are less useful than `Month Name` and `Day Name`.</p>
+            <h3>Summary Statistics for Numerical Columns</h3>
+            <p>To understand the distribution of numerical data, boxplots were generated for `transaction_qty`, `unit_price`, and `Total_Bill`.</p>
+            <img src="assets/boxplot.png" alt="Boxplot for Numerical Columns">
+            <h3>Checking for Missing Data</h3>
+            <pre><code>data.isna().sum()</code></pre>
+            <p>The dataset was verified for completeness and no missing values were found.</p>
+            <h3>Duplicate Entries Check</h3>
+            <pre><code>duplicate = data[data.duplicated()]</code></pre>
+            <p>No duplicate records were found, ensuring the uniqueness of each transaction.</p>
+            <h3>Date Format Conversion</h3>
+            <pre><code># Convert 'transaction_date' column to datetime format and save cleaned data to a new CSV file
+data['transaction_date'] = pd.to_datetime(data['transaction_date'], format="mixed", dayfirst=True)
+data.to_csv('../data/coffee_cleaned.csv', index=False)</code></pre>
+            <p>The date format was standardized for consistency, and the cleaned data was saved to a new CSV file named 'coffee_cleaned.csv'.</p>
+        </section>
+
+        <section id="analysis">
+            <h2>Analysis</h2>
+            <h3>Approach</h3>
+            <p>The analysis started with univariate analysis to assess individual variables. This was followed by time-series analysis to understand trends over time and multivariate analysis to explore relationships between variables.</p>
+            <h3>Univariate Analysis</h3>
+            <h4>Store Performance</h4>
+            <p>By aggregating transaction quantities for each store, it's evident that the three stores have almost identical purchase distributions. This suggests that performance is balanced across the stores, with no standout performer.</p>
+            <img src="assets/store_performance.png" alt="Total Transactions by Store Location">
+            <h4>Items Purchased per Transaction</h4>
+            <p>Most customers purchase one or two items per transaction. There's an opportunity to increase purchase volume through marketing strategies aimed at encouraging larger transactions (3-5 items).</p>
+            <img src="assets/items_purchased.png" alt="Distribution of Items Purchased per Transaction">
+            <h4>Product Category Purchases</h4>
+            <p>Coffee and tea account for nearly 70% of purchases, while coffee beans, loose tea, branded items, and packaged chocolate only make up 2.81%. Coffee and tea are the most popular, while other categories are less popular. Consider promotional strategies to boost sales in less popular categories.</p>
+            <img src="assets/product_category.png" alt="Product Category Distribution">
+            <h4>Price Distribution by Category</h4>
+            <p>Higher-priced items like loose tea and coffee beans have lower sales volumes. Products with lower prices and less variation in price are sold more frequently. Immediate consumption products sell more, whereas non-consumables or higher-priced items have lower sales volumes. There’s room for improving sales of less popular items through targeted promotions or pricing strategies.</p>
+            <img src="assets/price_distribution.png" alt="Unit Price Distribution by Product Category">
+            <h4>Drink Sizes</h4>
+            <p>Regular and large sizes are more commonly purchased. Some drinks have missing size information, but it’s clear that 'Regular' and 'Large' sizes are preferred. The trend indicates that focusing on regular and large sizes could align with customer preferences.</p>
+            <img src="assets/drink_sizes.png" alt="Sales Distribution by Drink Size">
+            <h3>Time-Series Analysis</h3>
+            <h4>Daily and Monthly Sales Trends</h4>
+            <p>Sales and transactions show a general increase over time, with consistent dips at the start and end of each month. Sales are growing, with a noticeable increase starting from February. The positive sales trend suggests growth. However, more data is needed to understand annual seasonality better.</p>
+            <img src="assets/daily_monthly_sales.png" alt="Daily Monthly Transactions Over Time">
+            <h4>Sales per Transaction</h4>
+            <p>Sales per transaction increase from the 21st to the 26th of the month, with fluctuations noticeable around the month's end and beginning. Sales per transaction show some periodic trends, but variations are minor. This suggests stable performance across different days of the month.</p>
+            <img src="assets/sales_per_trans.png" alt="Sales per Transactions Over Time">
+            <h4>Weekly and Hourly Sales Trends</h4>
+            <p>Sales do not vary significantly across days of the week, but there is a noticeable peak in sales from 8 a.m. to 10 a.m. Peak sales hours (8-10 a.m.) suggest an opportunity to optimize staffing and promotional efforts during these times to leverage higher customer traffic.</p>
+            <img src="assets/weekly_trans.png" alt="Weekly Transactions Over Time">
+            <img src="assets/daily_trans.png" alt="Daily Transactions Over Time">
+            <h3>Multivariate Analysis</h3>
+            <p>Purchase volumes for product categories are similar across all three stores. There are no significant differences in product category preferences among stores, indicating uniform demand.</p>
+            <img src="assets/multivariate.png" alt="Multivariate Analysis">
+        </section>
+
+        <section id="summary-of-findings">
+            <h2>Summary of Findings</h2>
+            <ul>
+                <li><strong>Store Performance:</strong> Sales and transactions are evenly distributed across stores.</li>
+                <li><strong>Transaction Quantity:</strong> Most transactions involve 1-2 items, with potential for growth in larger transactions.</li>
+                <li><strong>Product Preferences:</strong> Coffee and tea dominate sales, while higher-priced items have lower sales volumes.</li>
+                <li><strong>Price Sensitivity:</strong> Lower-priced, immediate-consumption products are more popular.</li>
+                <li><strong>Drink Sizes:</strong> Regular and large sizes are preferred.</li>
+                <li><strong>Sales Trends:</strong> Increasing sales over time with minor cyclical patterns observed monthly.</li>
+                <li><strong>Hourly Trends:</strong> Peak sales occur in the early morning; opportunities exist to optimize operations during peak and off-peak hours.</li>
+                <li><strong>Product Category Distribution:</strong> No clear preference for product categories across different stores.</li>
+            </ul>
+        </section>
+
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>This exploratory data analysis offers valuable insights into customer behavior and sales dynamics within the coffee shops. By identifying patterns and trends, we can better understand customer preferences and operational efficiencies. The balanced performance across stores, combined with insights into transaction sizes, product preferences, and sales trends, highlights both strengths and areas for potential growth. The analysis underscores the importance of aligning marketing strategies and operational practices with observed consumer behaviors and sales patterns. Leveraging these insights will enable the coffee shops to optimize their offerings, enhance customer satisfaction, and drive sustained growth. As the business continues to evolve, ongoing analysis will be crucial in adapting to changing trends and maintaining competitive advantage.</p>
+        </section>
+
+        <section id="recommended-actions">
+            <h2>Recommended Actions</h2>
+            <h3>Promotional Strategies</h3>
+            <p>Implement promotions to encourage larger purchases and increase the sales of less popular items.</p>
+            <h3>Operational Adjustments</h3>
+            <p>Adjust staff schedules to align with peak sales hours (8-10 a.m.) and manage inventory based on sales patterns.</p>
+            <h3>Marketing Focus</h3>
+            <p>Enhance marketing for high-value products and consider strategies to increase the sales of categories with lower transaction volumes.</p>
+        </section>
+
+        <section id="acknowledgements">
+            <h2>Acknowledgements</h2>
+            <p>Thank you to Maven Roasters for providing the dataset for this analysis.</p>
+        </section>
+    </main>
+</body>
+</html>
